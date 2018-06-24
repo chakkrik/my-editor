@@ -1,0 +1,21 @@
+/* style include via css, through angular (no encapsualtion) */
+@import "~font-awesome/css/font-awesome.min.css";
+@import "~primeng/resources/primeng.min.css";
+@import "~primeng/resources/themes/omega/theme.css";
+@import "../3rdparties/styles/kendo.common.min.css"; /*base style*/
+@import "../3rdparties/styles/kendo.blueopal.min.css";
+
+.fieldlist li {
+    list-style: none;
+}
+.k-state-selected  {
+    background-color : #eae8e8;
+}
+.k-panelbar>li.k-state-default>.k-link.k-state-selected, .k-panelbar>li>.k-state-selected {
+    color:black;
+}
+.k-state-focused.k-state-selected{
+    box-shadow: inset 0 0 3px 1px #eae8e8;
+
+}
+

@@ -1,0 +1,72 @@
+<table style="width: 100%; height: 100%;">
+        <tbody>
+        <tr style="background-color: aqua">
+        <td style="width: 20%;">เรื่อง</td>
+        <td style="width: 80%;">การออกและเสนอขายหน่วยทรัสต์ของทรัสต์เพื่อการลงทุนในอสังหาริมทรัพย์ (ทจ. 25/2557, ทจ. 26/2557, สม. 26/2557, ทธ. 27/2557, สร. 27/2557, สจ. 28/2557 และ สจ. 29/2557)</td>
+        </tr>
+        <tr style="background-color: aqua">
+        <td >ประเภทเอกสาร</td>
+        <td ><ul class="fieldlist">
+                <li>
+                    <input type="radio" name="engine" id="engine1" class="k-radio" checked="checked">
+                    <label class="k-radio-label" for="engine1">เพื่อทราบ</label>
+                </li>
+                <li>
+                    <input type="radio" name="engine" id="engine2" class="k-radio">
+                    <label class="k-radio-label" for="engine2">เพื่อดำเนินการแล้วแจ้งผลตอบกลับ</label>
+                </li>
+            
+            </ul>
+        </td>
+        </tr>
+        <tr style="background-color: aqua">
+        <td >รายละเอียด/สิ่งที่ต้องดำเนินการ</td>
+        <td >เพื่อเป็นข้อมูลในการออกและเสนอขายหน่วยทรัสต์ของทรัสต์เพื่อการลงทุนในอสังหาริมทรัพย์</td>
+        </tr>
+        <tr style="background-color:aqua">
+        <td  >เอกสารแนบ</td>
+        <td >
+            <div class="co-editor">
+            <p-button label="RTF" icon="fa-file-text-o" iconPos="left" (onClick)="createContent($event)"></p-button>
+            <p-button label="Tab" icon="fa-folder-o" iconPos="left" (onClick)="createTab($event)"></p-button>
+            <p-button label="Bar" icon="fa-bars" iconPos="left" (onClick)="createBar($event)"></p-button>
+                <div *ngFor="let contentItem of contentItems; let i = index"> 
+                    <div  *ngIf="contentItem.contentType === 'plain'"> 
+                        <textarea [class]="'textarea_' + i"></textarea> 
+                    </div> 
+                    <div  *ngIf="contentItem.contentType === 'tab'">   
+                      <div [class]="'tabs_' + i">
+                            <ul>
+                                <li>tab</li>
+                            </ul>
+                        </div>
+                    </div> 
+                    <div  *ngIf="contentItem.contentType === 'bar'">   
+                        <div [class]="'bars_' + i">
+                        </div>
+                        <div *ngIf="isEditMode">
+                            <button type="button" [class]="'addBar_'+ i" (click)="addBar($event)">+ new bar</button>  
+                        </div>  
+                    </div>
+                 </div>
+            </div>    
+                
+        
+        
+        
+       
+       
+                </td>
+        </tr>
+        <tr style="background-color:aqua">
+        <td >&nbsp;</td>
+        <td >&nbsp;</td>
+        </tr>
+        
+        </tbody>
+        </table>
+
+
+        <button type="button" (click)="saveScreen($event)">Save Screen</button>
+
+        <input type="checkbox" [checked]="isEditMode" (change)="changeMode()" /> EditMode

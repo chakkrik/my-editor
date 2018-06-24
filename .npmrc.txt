@@ -1,0 +1,1 @@
+@progress:registry=https://registry.npm.telerik.com/
