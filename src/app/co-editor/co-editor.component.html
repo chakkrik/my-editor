@@ -1,0 +1,25 @@
+<div class="co-editor">
+  <p-button label="RTF" icon="fa-file-text-o" iconPos="left" (onClick)="onClickCreateContent($event)"></p-button>
+  <p-button label="Tab" icon="fa-folder-o" iconPos="left" (onClick)="onClickCreateTab($event)"></p-button>
+  <p-button label="Bar" icon="fa-bars" iconPos="left" (onClick)="onClickCreateBar($event)"></p-button>
+      <div *ngFor="let type of contentHolderTypeList; let i = index"> 
+          <div  *ngIf="type === 'plain'"> 
+              <textarea [class]="'textarea_' + i"></textarea> 
+          </div> 
+          <div  *ngIf="type === 'tab'">   
+            <div [class]="'tabs_' + i">
+                  <ul>
+                      <li>tab</li>
+                  </ul>
+              </div>
+          </div> 
+          <div  *ngIf="type === 'bar'">   
+              <div [class]="'bars_' + i">
+              </div>
+              <div *ngIf="isEditMode">
+                  <button type="button" [class]="'addBar_'+ i" (click)="addBar($event)">+ new bar</button>  
+              </div>  
+          </div>
+       </div>
+  </div>    
+  
