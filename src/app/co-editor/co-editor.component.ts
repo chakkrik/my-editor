@@ -1,3 +1,9 @@
+//todo
+//4. change header save to model
+//1. view mode
+//2. bars imp
+//3. ui finish
+
 import "../../3rdparties/js/kendo.all.min.js";
 import { Component, OnInit } from '@angular/core';
 declare var $:any;
