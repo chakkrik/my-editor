@@ -11,6 +11,7 @@ export class CoEditorComponent implements OnInit {
   modelContentItems : any[] = [];
   isEditMode : boolean = true;
   contentHolderTypeList : any[] = [];
+  barDataSource : any[] = [];
   constructor() { }
 
 
@@ -65,6 +66,25 @@ onClickCreateBar(e){
      }
      return arrResult;
    }
+   addBarClassName(className){
+    let i =  className.split('_')[1];
+    let b = this.modelContentItems[i].tabs.length;
+   //1. add datamodel
+   this.modelContentItems[i].bars.push({header:'หัวข้อ',htmlContent:''});
+
+   //2. add bar
+    var kPanelBar = $(".bars_" + i).data('kendoPanelBar');
+    kPanelBar.append(
+          {text:"<span><input class='text_" + i + "_" + b + "' type=text value='"+ this.modelContentItems[i].bars[b].header + "' </input></span><span class='k-icon k-i-close close_" + i + "_" + b + "''></span>"  , encoded:false, content:"<div><textarea class='textarea_" + i + "_" + b + "'></textarea></div>"});
+   
+   
+          //register click event , input
+   
+            //3. create editor
+        this.setEditorValue(".text_" + i + "_" + b,"");
+   }
+
+
    addTabClassName(className, refItem){
     let i =  className.split('_')[1];
     let t = this.modelContentItems[i].tabs.length;
@@ -84,6 +104,11 @@ onClickCreateBar(e){
     $(".co-editor .k-tabstrip .k-item").off('click');  
     this.rebindTabClick(tabstrip);
 
+    $("INPUT.text_"+ i + "_" + t).on('input', (e) => {
+      let arrToken = e.target.className.split('_');
+      this.modelContentItems[arrToken[1]].tabs[arrToken[2]].header = e.target.value;  
+    });
+
     //4. render editor/ and set init value
     this.setEditorValue(".textarea_" + i + "_" + t,"");
   }
@@ -91,6 +116,7 @@ onClickCreateBar(e){
     $(".co-editor .k-panelbar .k-item").off('click');
     setTimeout(()=>{
       $(".co-editor .k-panelbar .k-item").on('click', (e) => {
+        debugger;
         if (e.target.tagName === 'INPUT'){
           //click on INPUT
           e.preventDefault();
@@ -99,6 +125,10 @@ onClickCreateBar(e){
         if (e.target.className.indexOf('k-i-close') > -1){
           e.preventDefault();
           e.stopPropagation();
+          var item = $(e.target).closest(".k-item");
+          this.removeBarByBarIndex(e.target.className,item.index());
+          //tabstrip.select(0);
+          
           //var item = $(e.target).closest(".k-item");
           //setTimeout(()=>{
             //this.removeTabByTabIndex(e.target.className,item.index());
@@ -142,6 +172,42 @@ onClickCreateBar(e){
       });
     });
   }
+  removeBarByBarIndex(className , barIndex){
+
+    //!!!!!!!!!!!!!!!!!!11 totodo
+    let arr = className.split('_');
+    let idx = arr[1];
+    
+      //1. destroy editor
+      var editor = $(".textarea_" + idx + "_" + barIndex).data("kendoEditor");
+      if (editor){
+        editor.destroy();
+      }
+      
+      //2. unregister bar event onclick    and textbox event !!!!!!!!
+      $(".co-editor .k-panelbar .k-item").off('click');  
+
+    //3. remove bar
+    var getPanelBarItemByIndex = function (panelBar, target) {
+      var itemIndexes = [target],
+          rootItem = panelBar.element.children("li").eq(itemIndexes[0]);
+
+      return itemIndexes.length > 1 ?
+          rootItem.find(".k-group > .k-item").eq(itemIndexes[1]) :
+          rootItem;
+    };
+    var kPanelBar = $(".bars_"+ idx).data('kendoPanelBar');
+    var selected = getPanelBarItemByIndex(kPanelBar, barIndex);
+    kPanelBar.remove(selected);
+      
+      //4. pop data model
+     this.modelContentItems[idx].bars.splice(barIndex,1);
+
+     //5. register
+     this.rebindBarClick();
+
+  }
+
   removeTabByTabIndex(className , tabIndex){
     let idx =  className.split('_')[1];
     
@@ -220,6 +286,12 @@ onClickCreateBar(e){
                 encoded: false,
                 content: "<div><textarea class='textarea_" + i + "_" + t + "'></textarea></div>"
               });
+              
+              $("INPUT.text_"+ i + "_" + t).on('input', (e) => {
+                let arrToken = e.target.className.split('_');
+                this.modelContentItems[arrToken[1]].tabs[arrToken[2]].header = e.target.value;
+              });
+
               this.setEditorValue(".textarea_" + i + "_" + t,contentItem.tabs[t].htmlContent);
             }
             tabstrip.append({
@@ -233,22 +305,29 @@ onClickCreateBar(e){
             tabstrip.select(0);
 
             this.rebindTabClick(tabstrip);
+
+            
      
         }); 
     }
     if (contentItem.contentType == 'bar'){
     setTimeout(() => {
-        let barDataSource = [];
+        this.barDataSource = [];
         for(let b=0;b<contentItem.bars.length;b++){
-          barDataSource.push({text:"<span><input type=text value='"+ contentItem.bars[b].header + "' </input></span><span class='k-icon k-i-close'></span>"  , encoded:false, content:"<div><textarea class='textarea_" + i + "_" + b + "'></textarea></div>"});
+          this.barDataSource.push({text:"<span><input class='text_" + i + "_" + b + "' type=text value='"+ contentItem.bars[b].header + "' </input></span><span class='k-icon k-i-close close_" + i + "_" + b + "''></span>"  , encoded:false, content:"<div><textarea class='textarea_" + i + "_" + b + "'></textarea></div>"});
         }
 
         $(".bars_"+ i).kendoPanelBar({ //init by JSON or HTML (we choose JSON), add/remove by API
           expandMode: "multiple",
-          dataSource: barDataSource
+          dataSource: this.barDataSource
         });
 
-        for(var b=0;b<barDataSource.length;b++){
+        for(var b=0;b<this.barDataSource.length;b++){
+          $("INPUT.text_"+ i + "_" + b).on('input', (e) => {
+            let arrToken = e.target.className.split('_');
+            this.modelContentItems[arrToken[1]].bars[arrToken[2]].header = e.target.value;
+          });
+
           this.setEditorValue(".textarea_" + i + "_" + b,contentItem.bars[b].htmlContent);
         }
 
