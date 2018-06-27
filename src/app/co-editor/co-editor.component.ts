@@ -308,6 +308,8 @@ onClickCreateBar(e){
 
               this.setEditorValue(".textarea_" + i + "_" + t,contentItem.tabs[t].htmlContent);
             }
+
+            //add + new tab
             tabstrip.append({
               text:"<span class='new-tab_" + i + "'>+ new tab</span>",
               encoded: false,
@@ -319,7 +321,6 @@ onClickCreateBar(e){
             tabstrip.select(0);
 
             this.rebindTabClick(tabstrip);
-
         }); 
     }
     if (contentItem.contentType == 'bar'){
