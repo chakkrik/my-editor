@@ -83,9 +83,9 @@ onClickCreateBar(e){
    //2. add bar
     var kPanelBar = $(".bars_" + i).data('kendoPanelBar');
     kPanelBar.append(
-          {text:"<span><input class='text_" + i + "_" + b + "' type=text value='"+ this.modelContentItems[i].bars[b].header + "' </input></span><span class='k-icon k-i-close close_" + i + "_" + b + "''></span>"  , encoded:false, content:"<div><textarea class='textarea_" + i + "_" + b + "'></textarea></div>"});
-   
-   
+          {text: this.createInputHeader(this.modelContentItems[i].bars[b].header,i,b), 
+            encoded:false, 
+            content:"<div><textarea class='textarea_" + i + "_" + b + "'></textarea></div>"});
           //register click event , input
           $("INPUT.text_"+ i + "_" + b).on('input', (e) => {
             let arrToken = e.target.className.split('_');
@@ -106,11 +106,11 @@ onClickCreateBar(e){
   
     //1. add datamodel
    this.modelContentItems[i].tabs.push({header:'หัวข้อ',htmlContent:''});
-
+      
    //2. add bar !!!!! every change on header should go back to model !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111
    var tabstrip = $(".tabs_"+ i).data('kendoTabStrip');
     tabstrip.insertBefore({
-      text:"<span><input class='text_" + i + "_" + t + "' type=text value='หัวข้อ'></input></span><span class='k-icon k-i-close close_" + i + "_" + t + "'></span>",
+      text: this.createInputHeader('หัวข้อ',i,t),
       encoded: false,
       content: "<div><textarea class='textarea_" + i + "_" + t + "'></textarea></div>"
     }, refItem);
@@ -239,12 +239,8 @@ onClickCreateBar(e){
         tabstrip.remove(tabIndex);
         this.rebindTabClick(tabstrip);
 
-
-      
-      
       //4. pop data model
      this.modelContentItems[idx].tabs.splice(tabIndex,1);
-
   }
   setEditorValue(cssClass, htmlContent){
     if (this.isEditMode){
@@ -275,6 +271,9 @@ onClickCreateBar(e){
       $(cssClass).parent().html(htmlContent);
     }
   }
+  createInputHeader(headerText,idx,sub_idx){
+    return "<span><input style='height: 12px;width: 80%' class='text_" + idx + "_" + sub_idx + "' type=text value='" + headerText + "'></input></span><span style='padding-left: 10px;vertical-align: text-bottom;' class='k-icon k-i-close close_" + idx + "_" + sub_idx + "'></span>"
+  }
   createControlsByModel(i, contentItem){
     if (contentItem.contentType == 'plain'){
       setTimeout(() => {
@@ -297,7 +296,7 @@ onClickCreateBar(e){
             var tabstrip = $(".tabs_"+ i).data("kendoTabStrip");
             for(var t=0;t<contentItem.tabs.length;t++){
               tabstrip.append({
-                text:"<span><input class='text_" + i + "_" + t + "' type=text value='" + contentItem.tabs[t].header + "'></input></span><span class='k-icon k-i-close close_" + i + "_" + t + "'></span>",
+                text: this.createInputHeader(contentItem.tabs[t].header,i,t),
                 encoded: false,
                 content: "<div><textarea class='textarea_" + i + "_" + t + "'></textarea></div>"
               });
@@ -327,7 +326,9 @@ onClickCreateBar(e){
     setTimeout(() => {
         this.barDataSource = [];
         for(let b=0;b<contentItem.bars.length;b++){
-          this.barDataSource.push({text:"<span><input class='text_" + i + "_" + b + "' type=text value='"+ contentItem.bars[b].header + "' </input></span><span class='k-icon k-i-close close_" + i + "_" + b + "''></span>"  , encoded:false, content:"<div><textarea class='textarea_" + i + "_" + b + "'></textarea></div>"});
+          this.barDataSource.push({text:this.createInputHeader(contentItem.bars[b].header,i,b), 
+            encoded:false, 
+            content:"<div><textarea class='textarea_" + i + "_" + b + "'></textarea></div>"});
         }
 
         $(".bars_"+ i).kendoPanelBar({ //init by JSON or HTML (we choose JSON), add/remove by API
