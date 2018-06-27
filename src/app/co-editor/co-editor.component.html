@@ -17,7 +17,7 @@
               <div [class]="'bars_' + i">
               </div>
               <div *ngIf="isEditMode">
-                  <button type="button" [class]="'addBar_'+ i" (click)="addBar($event)">+ new bar</button>  
+                  <p-button label="+ new bar" [class]="'btn-add-bar_'+ i" (onClick)="addBar($event)"></p-button>  
               </div>  
           </div>
        </div>

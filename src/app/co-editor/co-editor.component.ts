@@ -72,9 +72,11 @@ onClickCreateBar(e){
      }
      return arrResult;
    }
-   addBarClassName(className){
-    let i =  className.split('_')[1];
-    let b = this.modelContentItems[i].tabs.length;
+   addBar(e){
+   //addBarClassName(className){
+   debugger; 
+    let i =  e.currentTarget.parentElement.className.split('_')[1];
+    let b = this.modelContentItems[i].bars.length;
    //1. add datamodel
    this.modelContentItems[i].bars.push({header:'หัวข้อ',htmlContent:''});
 
@@ -85,9 +87,16 @@ onClickCreateBar(e){
    
    
           //register click event , input
+          $("INPUT.text_"+ i + "_" + b).on('input', (e) => {
+            let arrToken = e.target.className.split('_');
+            this.modelContentItems[arrToken[1]].bars[arrToken[2]].header = e.target.value;
+          });
    
-            //3. create editor
-        this.setEditorValue(".text_" + i + "_" + b,"");
+          $(".co-editor .k-panelbar .k-item").off('click');
+          this.rebindBarClick();
+
+          //3. create editor
+          this.setEditorValue(".textarea_" + i + "_" + b,"");
    }
 
 
@@ -117,12 +126,11 @@ onClickCreateBar(e){
 
     //4. render editor/ and set init value
     this.setEditorValue(".textarea_" + i + "_" + t,"");
+
   }
   rebindBarClick(){
-    $(".co-editor .k-panelbar .k-item").off('click');
     setTimeout(()=>{
       $(".co-editor .k-panelbar .k-item").on('click', (e) => {
-        debugger;
         if (e.target.tagName === 'INPUT'){
           //click on INPUT
           e.preventDefault();
@@ -204,6 +212,7 @@ onClickCreateBar(e){
     };
     var kPanelBar = $(".bars_"+ idx).data('kendoPanelBar');
     var selected = getPanelBarItemByIndex(kPanelBar, barIndex);
+    $(".co-editor .k-panelbar .k-item").off('click');
     kPanelBar.remove(selected);
       
       //4. pop data model
@@ -312,8 +321,6 @@ onClickCreateBar(e){
 
             this.rebindTabClick(tabstrip);
 
-            
-     
         }); 
     }
     if (contentItem.contentType == 'bar'){
